@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=devide-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <h1>Calculate Credit Card Payment Schedule</h1>
+    <form style="margin-left: 50px; width: 500px">
+      <div class="form-group">
+        <label for="beginingBalance">Begining Balance:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="beginingBalance"
+          value="0"
+        />
+      </div>
+      <div class="form-group">
+        <label for="anualInterestRate">Anual Interest Rate (APR):</label>
+        <input
+          type="text"
+          class="form-control"
+          id="anualInterestRate"
+          value="0"
+        />
+      </div>
+      <div class="form-group">
+        <label for="monthlyPayment">Monthly Payment:</label>
+        <input type="text" class="form-control" id="monthlyPayment" value="0" />
+      </div>
+      <button class="btn btn-primary" type="button" onclick="calculate()">
+        Calculate Payment Schedule
+      </button>
+      <button class="btn btn-danger" type="submit" onclick="reset()">
+        Reset
+      </button>
+    </form>
+
+    <div id="data-table">
+      <table class="table table-striped" id="html-data-table">
+        <tr>
+          <th>Month</th>
+          <th>Begining Balance</th>
+          <th>Payment</th>
+          <th>Interest</th>
+          <th>Ending Balance</th>
+        </tr>
+      </table>
+    </div>
+
+    <script type="text/javascript" charset="utf-8"></script>
+    <script>
+      function reset() {
+        document.getElementById("beginingBalance").value = 0;
+        document.getElementById("anualInterestRate").value = 0;
+        document.getElementById("monthlyPayment").value = 0;
+        document.getElementById("result").innerHTML = "";
+      }
+      function calculate() {
+        var beginingBalance = document.getElementById("beginingBalance").value;
+        var anualInterestRate =
+          document.getElementById("anualInterestRate").value;
+        var monthlyPayment = document.getElementById("monthlyPayment").value;
+        var result = document.getElementById("result");
+        var month1 = document.getElementById("month1");
+        var month = 0;
+        var interestAmmount = 0;
+
+        for (let i = 0; i < 11; i++) {
+          month = i + 1;
+          let interestCharge = (beginingBalance * anualInterestRate) / 100;
+          interestCharge = interestCharge / 12;
+          let payment = monthlyPayment;
+          let endingBalance = beginingBalance - payment + interestCharge;
+
+          if (endingBalance < 0) {
+            payment = beginingBalance + interestCharge;
+
+            endingBalance = 0;
+          }
+
+          var table = document.getElementById("html-data-table");
+          var row = table.insertRow(i + 1);
+          var cell1 = row.insertCell(0);
+          var cell2 = row.insertCell(1);
+          var cell3 = row.insertCell(2);
+          var cell4 = row.insertCell(3);
+          var cell5 = row.insertCell(4);
+          cell1.innerHTML = parseInt(month);
+          cell2.innerHTML = parseFloat(beginingBalance).toFixed(2);
+          cell3.innerHTML = parseFloat(payment).toFixed(2);
+          cell4.innerHTML = parseFloat(interestCharge).toFixed(2);
+          cell5.innerHTML = parseFloat(endingBalance).toFixed(2);
+
+          beginingBalance = endingBalance;
+
+          if (endingBalance <= 0) {
+            break;
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
